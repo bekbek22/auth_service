@@ -1,48 +1,24 @@
 package middleware
 
 import (
-	"sync"
-	"time"
+	"context"
+	"errors"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
-type RateLimiter struct {
-	mu       sync.Mutex
-	attempts map[string][]int64 // email -> timestamps
-	limit    int
-	window   int64 // sec
-}
-
-func NewRateLimiter(limit int, windowSeconds int64) *RateLimiter {
-	return &RateLimiter{
-		attempts: make(map[string][]int64),
-		limit:    limit,
-		window:   windowSeconds,
-	}
-}
-
-func (r *RateLimiter) Allow(email string) bool {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	now := time.Now().Unix()
-	windowStart := now - r.window
-
-	times := r.attempts[email]
-
-	// Filter only attempts that are still in the window.
-	var recent []int64
-	for _, t := range times {
-		if t >= windowStart {
-			recent = append(recent, t)
-		}
+func ValidateJWT(ctx context.Context, tokenString, secret string) (jwt.MapClaims, error) {
+	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+		return []byte(secret), nil
+	})
+	if err != nil || !token.Valid {
+		return nil, errors.New("invalid or expired token")
 	}
 
-	if len(recent) >= r.limit {
-		return false
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, errors.New("invalid token claims")
 	}
 
-	// Allow and record time
-	recent = append(recent, now)
-	r.attempts[email] = recent
-	return true
+	return claims, nil
 }

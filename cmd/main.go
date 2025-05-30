@@ -38,7 +38,8 @@ func main() {
 	db := client.Database(cfg.MongoDBName)
 
 	userRepo := repository.NewUserRepository(db)
-	authService := service.NewAuthService(userRepo, cfg)
+	tokenRepo := repository.NewTokenRepository(db)
+	authService := service.NewAuthService(userRepo, tokenRepo, cfg)
 	authHandler := handler.NewAuthHandler(authService)
 
 	//Create gRPC Server

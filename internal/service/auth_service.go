@@ -9,20 +9,23 @@ import (
 	"github.com/bekbek22/auth_service/internal/model"
 	"github.com/bekbek22/auth_service/internal/repository"
 	"github.com/bekbek22/auth_service/internal/utils"
+	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/bekbek22/auth_service/config"
 )
 
 type AuthService struct {
 	repo        *repository.UserRepository
+	tokenRepo   *repository.TokenRepository
 	cfg         *config.Config
 	rateLimiter *middleware.RateLimiter
 }
 
-func NewAuthService(repo *repository.UserRepository, cfg *config.Config) *AuthService {
-	rl := middleware.NewRateLimiter(5, 60) // 5 ticks per 60 sec
+func NewAuthService(userRepo *repository.UserRepository, tokenRepo *repository.TokenRepository, cfg *config.Config) *AuthService {
+	rl := middleware.NewRateLimiter(5, 60)
 	return &AuthService{
-		repo:        repo,
+		repo:        userRepo,
+		tokenRepo:   tokenRepo,
 		cfg:         cfg,
 		rateLimiter: rl,
 	}
@@ -89,4 +92,25 @@ func (s *AuthService) Login(ctx context.Context, email, password string) (string
 	}
 
 	return token, nil
+}
+
+func (s *AuthService) Logout(ctx context.Context, token string) error {
+	parsed, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+		return []byte(s.cfg.JWTSecret), nil
+	})
+	if err != nil || !parsed.Valid {
+		return errors.New("invalid token")
+	}
+
+	claims, ok := parsed.Claims.(jwt.MapClaims)
+	if !ok {
+		return errors.New("invalid claims")
+	}
+
+	exp, ok := claims["exp"].(float64)
+	if !ok {
+		return errors.New("missing exp")
+	}
+
+	return s.tokenRepo.BlacklistToken(ctx, token, int64(exp))
 }

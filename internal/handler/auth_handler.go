@@ -38,3 +38,11 @@ func (c *AuthHandler) Login(ctx context.Context, req *pb.LoginRequest) (*pb.Logi
 		AccessToken: token,
 	}, nil
 }
+
+func (h *AuthHandler) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+	err := h.service.Logout(ctx, req.AccessToken)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "Logout failed: %v", err)
+	}
+	return &pb.LogoutResponse{Message: "Logged out successfully"}, nil
+}

@@ -7,6 +7,8 @@ option go_package = "github.com/bekbek22/auth_service/api/proto;proto";
 service AuthService {
   rpc Register (RegisterRequest) returns (RegisterResponse);
   rpc Login (LoginRequest) returns (LoginResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
 }
 
 message RegisterRequest {
@@ -25,4 +27,29 @@ message LoginRequest {
 
 message LoginResponse {
   string access_token = 1;
+}
+
+message LogoutRequest {
+  string access_token = 1;
+}
+
+message LogoutResponse {
+  string message = 1;
+}
+
+message ListUsersRequest {
+  string name = 1;
+  string email = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string name = 3;
 }
