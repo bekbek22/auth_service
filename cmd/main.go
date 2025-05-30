@@ -13,7 +13,7 @@ import (
 
 	pb "github.com/bekbek22/auth_service/api/proto"
 	"github.com/bekbek22/auth_service/config"
-	"github.com/bekbek22/auth_service/internal/controller"
+	"github.com/bekbek22/auth_service/internal/handler"
 	"github.com/bekbek22/auth_service/internal/repository"
 	"github.com/bekbek22/auth_service/internal/service"
 )
@@ -39,16 +39,16 @@ func main() {
 
 	userRepo := repository.NewUserRepository(db)
 	authService := service.NewAuthService(userRepo, cfg)
-	authController := controller.NewAuthController(authService)
+	authHandler := handler.NewAuthHandler(authService)
 
 	//Create gRPC Server
 	listener, err := net.Listen("tcp", ":"+cfg.GRPCPort)
 	if err != nil {
-		log.Fatalf("❌ Failed to listen on port %s: %v", cfg.GRPCPort, err)
+		log.Fatalf("Failed to listen on port %s: %v", cfg.GRPCPort, err)
 	}
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterAuthServiceServer(grpcServer, authController)
+	pb.RegisterAuthServiceServer(grpcServer, authHandler)
 
 	fmt.Printf("gRPC server is running on port %s\n", cfg.GRPCPort)
 
