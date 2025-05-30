@@ -5,6 +5,7 @@ import (
 	"errors"
 	"regexp"
 
+	"github.com/bekbek22/auth_service/internal/middleware"
 	"github.com/bekbek22/auth_service/internal/model"
 	"github.com/bekbek22/auth_service/internal/repository"
 	"github.com/bekbek22/auth_service/internal/utils"
@@ -13,12 +14,18 @@ import (
 )
 
 type AuthService struct {
-	repo *repository.UserRepository
-	cfg  *config.Config
+	repo        *repository.UserRepository
+	cfg         *config.Config
+	rateLimiter *middleware.RateLimiter
 }
 
 func NewAuthService(repo *repository.UserRepository, cfg *config.Config) *AuthService {
-	return &AuthService{repo: repo, cfg: cfg}
+	rl := middleware.NewRateLimiter(5, 60) // 5 ticks per 60 sec
+	return &AuthService{
+		repo:        repo,
+		cfg:         cfg,
+		rateLimiter: rl,
+	}
 }
 
 func isValidEmail(email string) bool {
@@ -63,6 +70,10 @@ func (s *AuthService) Register(ctx context.Context, email, password string) erro
 }
 
 func (s *AuthService) Login(ctx context.Context, email, password string) (string, error) {
+	if !s.rateLimiter.Allow(email) {
+		return "", errors.New("too many login attempts, please wait")
+	}
+
 	user, err := s.repo.FindByEmail(ctx, email)
 	if err != nil {
 		return "", errors.New("user not found")
