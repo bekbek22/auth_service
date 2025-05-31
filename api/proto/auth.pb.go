@@ -499,7 +499,6 @@ func (x *ListUsersResponse) GetTotal() int32 {
 
 type GetProfileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -532,13 +531,6 @@ func (x *GetProfileRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetProfileRequest.ProtoReflect.Descriptor instead.
 func (*GetProfileRequest) Descriptor() ([]byte, []int) {
 	return file_api_proto_auth_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *GetProfileRequest) GetUserId() string {
-	if x != nil {
-		return x.UserId
-	}
-	return ""
 }
 
 type GetProfileResponse struct {
@@ -1001,9 +993,8 @@ const file_api_proto_auth_proto_rawDesc = "" +
 	"\x04role\x18\x04 \x01(\tR\x04role\"O\n" +
 	"\x11ListUsersResponse\x12$\n" +
 	"\x05users\x18\x01 \x03(\v2\x0e.auth.UserItemR\x05users\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x05R\x05total\",\n" +
-	"\x11GetProfileRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"b\n" +
+	"\x05total\x18\x02 \x01(\x05R\x05total\"\x13\n" +
+	"\x11GetProfileRequest\"b\n" +
 	"\x12GetProfileResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +

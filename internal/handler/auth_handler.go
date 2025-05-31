@@ -93,7 +93,22 @@ func (h *AuthHandler) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (
 }
 
 func (h *AuthHandler) GetProfile(ctx context.Context, req *pb.GetProfileRequest) (*pb.GetProfileResponse, error) {
-	user, err := h.service.GetProfile(ctx, req.UserId)
+	tokenStr, err := middleware.ExtractTokenFromContext(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "missing token")
+	}
+
+	claims, err := middleware.ValidateJWT(tokenStr, h.service.Cfg.JWTSecret)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid token")
+	}
+
+	userID, ok := claims["user_id"].(string)
+	if !ok {
+		return nil, status.Errorf(codes.Internal, "missing user_id in token")
+	}
+
+	user, err := h.service.GetProfile(ctx, userID)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "user not found")
 	}
