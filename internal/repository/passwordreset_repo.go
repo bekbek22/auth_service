@@ -7,6 +7,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+type IPasswordResetRepository interface {
+	SaveToken(ctx context.Context, email, token string, exp int64) error
+	GetEmailByToken(ctx context.Context, token string) (string, error)
+	DeleteToken(ctx context.Context, token string) error
+}
+
 type PasswordResetRepository struct {
 	collection *mongo.Collection
 }

@@ -10,6 +10,18 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+type IAuthHandler interface {
+	Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error)
+	Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error)
+	Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.LogoutResponse, error)
+	ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error)
+	GetProfile(ctx context.Context, req *pb.GetProfileRequest) (*pb.GetProfileResponse, error)
+	UpdateProfile(ctx context.Context, req *pb.UpdateProfileRequest) (*pb.UpdateProfileResponse, error)
+	DeleteProfile(ctx context.Context, req *pb.DeleteProfileRequest) (*pb.DeleteProfileResponse, error)
+	RequestPasswordReset(ctx context.Context, req *pb.RequestPasswordResetRequest) (*pb.RequestPasswordResetResponse, error)
+	ResetPassword(ctx context.Context, req *pb.ResetPasswordRequest) (*pb.ResetPasswordResponse, error)
+}
+
 type AuthHandler struct {
 	pb.UnimplementedAuthServiceServer
 	service *service.AuthService

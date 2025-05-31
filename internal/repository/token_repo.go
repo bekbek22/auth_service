@@ -6,6 +6,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+type ITokenRepository interface {
+	BlacklistToken(ctx context.Context, token string, exp int64) error
+	IsTokenBlacklisted(ctx context.Context, token string) (bool, error)
+}
 type TokenRepository struct {
 	collection *mongo.Collection
 }

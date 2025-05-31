@@ -19,6 +19,18 @@ import (
 	"github.com/bekbek22/auth_service/config"
 )
 
+type IAuthService interface {
+	Register(ctx context.Context, name, email, password string) error
+	Login(ctx context.Context, email, password string) (string, error)
+	Logout(ctx context.Context, token string) error
+	ListUsers(ctx context.Context, name, email string, page, limit int32) ([]model.User, int32, error)
+	GetProfile(ctx context.Context, userID string) (*model.User, error)
+	UpdateProfile(ctx context.Context, userID, name, email string) error
+	DeleteProfile(ctx context.Context, userID string) error
+	RequestPasswordReset(ctx context.Context, email string) (string, error)
+	ResetPassword(ctx context.Context, token, newPassword string) error
+}
+
 type AuthService struct {
 	repo              *repository.UserRepository
 	tokenRepo         *repository.TokenRepository

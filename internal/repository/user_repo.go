@@ -12,6 +12,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type IUserRepository interface {
+	FindByEmail(ctx context.Context, email string) (*model.User, error)
+	CreateUser(ctx context.Context, user *model.User) error
+	FindByID(ctx context.Context, id primitive.ObjectID) (*model.User, error)
+	UpdateUserByID(ctx context.Context, id primitive.ObjectID, update interface{}) error
+	SoftDeleteUserByID(ctx context.Context, id primitive.ObjectID) error
+}
 type UserRepository struct {
 	collection *mongo.Collection
 }
