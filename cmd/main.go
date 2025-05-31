@@ -39,7 +39,8 @@ func main() {
 
 	userRepo := repository.NewUserRepository(db)
 	tokenRepo := repository.NewTokenRepository(db)
-	authService := service.NewAuthService(userRepo, tokenRepo, cfg)
+	passwordresetRepo := repository.NewPasswordResetRepository(db)
+	authService := service.NewAuthService(userRepo, tokenRepo, passwordresetRepo, cfg)
 	authHandler := handler.NewAuthHandler(authService)
 
 	//Create gRPC Server

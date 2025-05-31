@@ -9,11 +9,17 @@ service AuthService {
   rpc Login (LoginRequest) returns (LoginResponse);
   rpc Logout(LogoutRequest) returns (LogoutResponse);
   rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
+  rpc GetProfile (GetProfileRequest) returns (GetProfileResponse);
+  rpc UpdateProfile (UpdateProfileRequest) returns (UpdateProfileResponse);
+  rpc DeleteProfile (DeleteProfileRequest) returns (DeleteProfileResponse);
+  rpc RequestPasswordReset(RequestPasswordResetRequest) returns (RequestPasswordResetResponse);
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
 }
 
 message RegisterRequest {
-  string email = 1;
-  string password = 2;
+  string name = 1;
+  string email = 2;
+  string password = 3;
 }
 
 message RegisterResponse {
@@ -44,12 +50,57 @@ message ListUsersRequest {
   int32 limit = 4;
 }
 
-message ListUsersResponse {
-  repeated User users = 1;
+message UserItem {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string role = 4;
 }
 
-message User {
+message ListUsersResponse {
+  repeated UserItem users = 1;
+  int32 total = 2;
+}
+
+message GetProfileRequest {
+  string user_id = 1;
+}
+
+message GetProfileResponse {
   string id = 1;
+  string name = 2;
+  string email = 3;
+  string role = 4;
+}
+
+message UpdateProfileRequest {
+  string name = 1;
   string email = 2;
-  string name = 3;
+}
+
+message UpdateProfileResponse {
+  string message = 1;
+}
+
+message DeleteProfileRequest {}
+
+message DeleteProfileResponse {
+  string message = 1;
+}
+
+message RequestPasswordResetRequest {
+  string email = 1;
+}
+
+message RequestPasswordResetResponse {
+  string reset_token = 1; // จำลองว่าเป็นลิงก์จาก email
+}
+
+message ResetPasswordRequest {
+  string reset_token = 1;
+  string new_password = 2;
+}
+
+message ResetPasswordResponse {
+  string message = 1;
 }

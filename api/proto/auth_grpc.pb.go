@@ -19,10 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_Register_FullMethodName  = "/auth.AuthService/Register"
-	AuthService_Login_FullMethodName     = "/auth.AuthService/Login"
-	AuthService_Logout_FullMethodName    = "/auth.AuthService/Logout"
-	AuthService_ListUsers_FullMethodName = "/auth.AuthService/ListUsers"
+	AuthService_Register_FullMethodName             = "/auth.AuthService/Register"
+	AuthService_Login_FullMethodName                = "/auth.AuthService/Login"
+	AuthService_Logout_FullMethodName               = "/auth.AuthService/Logout"
+	AuthService_ListUsers_FullMethodName            = "/auth.AuthService/ListUsers"
+	AuthService_GetProfile_FullMethodName           = "/auth.AuthService/GetProfile"
+	AuthService_UpdateProfile_FullMethodName        = "/auth.AuthService/UpdateProfile"
+	AuthService_DeleteProfile_FullMethodName        = "/auth.AuthService/DeleteProfile"
+	AuthService_RequestPasswordReset_FullMethodName = "/auth.AuthService/RequestPasswordReset"
+	AuthService_ResetPassword_FullMethodName        = "/auth.AuthService/ResetPassword"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -33,6 +38,11 @@ type AuthServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
+	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error)
+	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*UpdateProfileResponse, error)
+	DeleteProfile(ctx context.Context, in *DeleteProfileRequest, opts ...grpc.CallOption) (*DeleteProfileResponse, error)
+	RequestPasswordReset(ctx context.Context, in *RequestPasswordResetRequest, opts ...grpc.CallOption) (*RequestPasswordResetResponse, error)
+	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
 }
 
 type authServiceClient struct {
@@ -83,6 +93,56 @@ func (c *authServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest,
 	return out, nil
 }
 
+func (c *authServiceClient) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetProfileResponse)
+	err := c.cc.Invoke(ctx, AuthService_GetProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*UpdateProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateProfileResponse)
+	err := c.cc.Invoke(ctx, AuthService_UpdateProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) DeleteProfile(ctx context.Context, in *DeleteProfileRequest, opts ...grpc.CallOption) (*DeleteProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteProfileResponse)
+	err := c.cc.Invoke(ctx, AuthService_DeleteProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RequestPasswordReset(ctx context.Context, in *RequestPasswordResetRequest, opts ...grpc.CallOption) (*RequestPasswordResetResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RequestPasswordResetResponse)
+	err := c.cc.Invoke(ctx, AuthService_RequestPasswordReset_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResetPasswordResponse)
+	err := c.cc.Invoke(ctx, AuthService_ResetPassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -91,6 +151,11 @@ type AuthServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
+	GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error)
+	UpdateProfile(context.Context, *UpdateProfileRequest) (*UpdateProfileResponse, error)
+	DeleteProfile(context.Context, *DeleteProfileRequest) (*DeleteProfileResponse, error)
+	RequestPasswordReset(context.Context, *RequestPasswordResetRequest) (*RequestPasswordResetResponse, error)
+	ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -112,6 +177,21 @@ func (UnimplementedAuthServiceServer) Logout(context.Context, *LogoutRequest) (*
 }
 func (UnimplementedAuthServiceServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
+}
+func (UnimplementedAuthServiceServer) GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProfile not implemented")
+}
+func (UnimplementedAuthServiceServer) UpdateProfile(context.Context, *UpdateProfileRequest) (*UpdateProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateProfile not implemented")
+}
+func (UnimplementedAuthServiceServer) DeleteProfile(context.Context, *DeleteProfileRequest) (*DeleteProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteProfile not implemented")
+}
+func (UnimplementedAuthServiceServer) RequestPasswordReset(context.Context, *RequestPasswordResetRequest) (*RequestPasswordResetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestPasswordReset not implemented")
+}
+func (UnimplementedAuthServiceServer) ResetPassword(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -206,6 +286,96 @@ func _AuthService_ListUsers_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_GetProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).GetProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_GetProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).GetProfile(ctx, req.(*GetProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_UpdateProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).UpdateProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_UpdateProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).UpdateProfile(ctx, req.(*UpdateProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_DeleteProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).DeleteProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_DeleteProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).DeleteProfile(ctx, req.(*DeleteProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RequestPasswordReset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestPasswordResetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RequestPasswordReset(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_RequestPasswordReset_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RequestPasswordReset(ctx, req.(*RequestPasswordResetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_ResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).ResetPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_ResetPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).ResetPassword(ctx, req.(*ResetPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +398,26 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUsers",
 			Handler:    _AuthService_ListUsers_Handler,
+		},
+		{
+			MethodName: "GetProfile",
+			Handler:    _AuthService_GetProfile_Handler,
+		},
+		{
+			MethodName: "UpdateProfile",
+			Handler:    _AuthService_UpdateProfile_Handler,
+		},
+		{
+			MethodName: "DeleteProfile",
+			Handler:    _AuthService_DeleteProfile_Handler,
+		},
+		{
+			MethodName: "RequestPasswordReset",
+			Handler:    _AuthService_RequestPasswordReset_Handler,
+		},
+		{
+			MethodName: "ResetPassword",
+			Handler:    _AuthService_ResetPassword_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

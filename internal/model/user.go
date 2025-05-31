@@ -11,6 +11,8 @@ type User struct {
 	Name      string             `bson:"name"`
 	Email     string             `bson:"email"`
 	Password  string             `bson:"password"`
+	Role      string             `bson:"role"`
+	IsDeleted bool               `bson:"is_deleted"` //สำหรับ soft delete
 	CreatedAt int64              `bson:"created_at"`
 }
 
